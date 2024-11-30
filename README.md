@@ -104,7 +104,6 @@ Download the appropriate MicroPython firmware for ESP32-S3 from [here](https://m
    ```
 
 ---
----
 
 ## **Steps to Add OV2640 to ESP32**
 
