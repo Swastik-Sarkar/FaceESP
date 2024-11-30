@@ -187,3 +187,23 @@ For more advanced control or performance, consider using the **ESP-IDF framework
    - Use a serial terminal to monitor output.
 
 ---
+```mermaid
+flowchart TD;
+    Start["Start / Power On"];
+    Start --> HardwareCheck["Check Components"];
+    HardwareCheck -->|Hardware OK| MainMode;
+    HardwareCheck -->|Hardware Error| ErrorDisplay["Show 'Hardware Error' on OLED"];
+    MainMode["Main Mode: Detect Face"] -->|Face Detected| AccessGranted["Green LED Blinks + 'Access Granted' on OLED"];
+    MainMode -->|Face Not Detected| AccessDenied["Red LED Blinks + 'Access Denied' on OLED"];
+    MainMode --> Register["Register Button Pressed"];
+    Register --> CaptureFace["Capture Face"];
+    CaptureFace --> ShowRegister["Show 'Register?' on OLED"];
+    ShowRegister -->|Cancel Pressed| MainMode;
+    ShowRegister -->|On/Off Pressed 3x| SaveFace["Save Face to SD"] --> MainMode;
+    MainMode --> ClearMode["Clear Button Pressed"];
+    ClearMode --> DeleteFaces["Delete All Faces on SD"] --> MainMode;
+    MainMode --> ResetMode["Reset Button Pressed"];
+    ResetMode --> Reinitialize["Reinitialize Hardware"] --> MainMode;
+    MainMode --> PowerOff["Long Press On/Off"];
+    PowerOff --> ShutDown["Show 'Shutting Down' on OLED"];
+```
