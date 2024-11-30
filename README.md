@@ -12,11 +12,7 @@ A comprehensive guide to building a self-contained face recognition system using
 3. [Software Requirements](#software-requirements)
 4. [File Structure](#file-structure)
 5. [MicroPython Installation](#micropython-installation)
-6. [Code Overview](#code-overview)
-    - [Bootloader Script](#bootloader-script)
-    - [Main Program](#main-program)
-    - [Components](#components)
-7. [How to Run](#how-to-run)
+6. [How to Run](#how-to-run)
 
 ---
 
@@ -108,98 +104,7 @@ Download the appropriate MicroPython firmware for ESP32-S3 from [here](https://m
 
 ---
 
-## **Code Overview**
 
-### **1. Bootloader Script (`boot.py`)**
-Resides in ESP32 flash. Mounts the SD card and runs `main.py`:
-```python
-import os
-import sdcard
-from machine import Pin, SPI
-
-# SD Card Initialization
-spi = SPI(2, sck=Pin(14), mosi=Pin(13), miso=Pin(12))
-sd = sdcard.SDCard(spi, Pin(15))
-os.mount(sd, "/sd")
-
-# Run main.py
-MAIN_PROGRAM = "/sd/main.py"
-if os.path.exists(MAIN_PROGRAM):
-    with open(MAIN_PROGRAM) as f:
-        exec(f.read())
-else:
-    print("main.py not found on SD card.")
-```
-
----
-
-### **2. Main Program (`main.py`)**
-Manages logic and imports components:
-```python
-import sys
-import time
-from hardware import setup_hardware, recognize_face, register_face, clear_faces
-from oled import display_message
-
-sys.path.append("/sd/components")
-setup_hardware()
-
-def main():
-    while True:
-        display_message("System Ready", "Waiting...")
-        recognize_face()
-
-if __name__ == "__main__":
-    main()
-```
-
----
-
-### **3. Component Code**
-
-#### **Hardware Control (`hardware.py`)**
-Handles GPIO, LEDs, buttons, and buzzer:
-```python
-from machine import Pin
-
-# GPIO Pins
-GREEN_LED = 15
-RED_LED = 16
-BUZZER = 17
-BUTTON_ON_OFF = 18
-
-green_led = Pin(GREEN_LED, Pin.OUT)
-red_led = Pin(RED_LED, Pin.OUT)
-buzzer = Pin(BUZZER, Pin.OUT)
-
-def setup_hardware():
-    green_led.off()
-    red_led.off()
-    buzzer.off()
-
-def recognize_face():
-    green_led.on()
-    time.sleep(1)
-    green_led.off()
-```
-
-#### **OLED Display (`ssd1306.py`)**
-Displays messages:
-```python
-from machine import I2C, Pin
-import ssd1306
-
-i2c = I2C(0, scl=Pin(22), sda=Pin(21))
-oled = ssd1306.SSD1306_I2C(128, 64, i2c)
-
-def display_message(line1, line2=""):
-    oled.fill(0)
-    oled.text(line1, 0, 0)
-    oled.text(line2, 0, 16)
-    oled.show()
-```
-
----
 
 ## **How to Run**
 
