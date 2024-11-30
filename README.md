@@ -12,7 +12,8 @@ A comprehensive guide to building a self-contained face recognition system using
 3. [Software Requirements](#software-requirements)
 4. [File Structure](#file-structure)
 5. [MicroPython Installation](#micropython-installation)
-6. [How to Run](#how-to-run)
+6. [Steps to Add OV2640 to ESP32](#Steps-to-Add-OV2640-to-ESP32)
+7. [How to Run](#how-to-run)
 
 ---
 
